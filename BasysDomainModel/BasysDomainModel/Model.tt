@@ -1,0 +1,355 @@
+﻿<#@ template debug="true" hostSpecific="true" #>
+<#@ output extension=".cs" #>
+<#@ Assembly Name="System.Core.dll" #>
+<#@ Assembly Name="System.Xml.dll" #>
+<#@ Assembly Name="System.Xml.Linq.dll" #>
+<#@ Assembly Name="System.Windows.Forms.dll" #>
+<#@ import namespace="System" #>
+<#@ import namespace="System.IO" #>
+<#@ import namespace="System.Diagnostics" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Xml" #>
+<#@ import namespace="System.Xml.Linq" #>
+<#@ import namespace="System.Collections" #>
+<#@ import namespace="System.Collections.Generic" #> 
+ 
+<#@ include file="TemplateFileManagerV2.1.ttinclude" #>
+
+<#
+
+
+//Configuration
+
+var namespacePrefix = "Basys.Model.";
+
+
+var dir = System.IO.Path.GetDirectoryName(this.Host.TemplateFile);
+var files = System.IO.Directory.GetFiles(Path.Combine(dir,"model"),"*.ecore");
+
+var manager = TemplateFileManager.Create(this);
+
+foreach (var file in files)
+{
+	var outFilename = Path.GetFileNameWithoutExtension(file);
+	manager.StartNewFile(FirstLetterToUpper(outFilename) + ".cs");
+
+	var doc = new System.Xml.XmlDocument();
+	doc.Load(file);
+	var nsManager = new XmlNamespaceManager(doc.NameTable);
+	nsManager.AddNamespace("xmi","http://www.omg.org/XMI");
+	nsManager.AddNamespace("xsi","http://www.w3.org/2001/XMLSchema-instance");
+	nsManager.AddNamespace("ecore","http://www.eclipse.org/emf/2002/Ecore");
+#> 
+<#
+//Setup
+foreach (System.Xml.XmlElement Package in doc.SelectNodes("//ecore:EPackage",nsManager))
+{
+	var PackageName = Package.Attributes["name"].Value;
+	var PackagePrefix = Package.Attributes["nsPrefix"].Value;
+	var PackageURI = Package.Attributes["nsURI"].Value;
+	//var EnumName = PackageName + "Enum";	
+	var Classifiers = Package.SelectNodes("//eClassifiers[@xsi:type='ecore:EClass']",nsManager);
+	var DataTypes = Package.SelectNodes("//eClassifiers[@xsi:type='ecore:EDataType']",nsManager);
+	var Enums = Package.SelectNodes("//eClassifiers[@xsi:type='ecore:EEnum']",nsManager);
+#>
+using System;
+using System.Collections.Generic;
+using System.Reflection;
+
+using Newtonsoft.Json;
+
+
+/// <summary>
+<#
+	string summary = getDocumentation(Package, "\t");
+	if (summary != "")
+	{
+#>    
+/// <#= summary #>
+<#
+	 }
+#>
+/// name = <#= PackageName #>
+/// nsPrefix = <#= PackagePrefix #>
+/// nsURI = <#= PackageURI #>
+/// </summary>
+namespace <#=namespacePrefix + FirstLetterToUpper(PackageName)#>
+{
+
+#region Classes
+
+<# //Generate Classes
+	foreach (System.Xml.XmlElement Classifier in Classifiers)
+	{			
+		var className = Classifier.Attributes["name"].Value;
+		XmlAttribute superTypes = (XmlAttribute)Classifier.Attributes.GetNamedItem("eSuperTypes");
+		string val = string.Empty;
+		if (superTypes != null)
+		{
+			
+			var stArray = superTypes.Value.Split(' ');
+			var stResult = new List<string>();
+			foreach (var st in stArray)
+            {
+				if (st.StartsWith("#//"))
+                {
+					stResult.Add(st.Replace("#//",""));
+				} 
+				else 
+				{
+					var pattern = "#//";
+					var idx = st.IndexOf(pattern);
+					if (idx > 0) 
+                    {
+						var basePackage = FirstLetterToUpper(st.Substring(0,idx).Replace(".ecore",""));
+						var baseType    = st.Substring(idx+pattern.Length);
+						stResult.Add(namespacePrefix + basePackage + "." + baseType);
+                    }
+				}
+					
+			}
+
+			val = " : " + string.Join(", ", stResult.ToArray());
+			//val = superTypes.Value;
+			//val = val.Replace("#//","");	
+			//val = val.Replace(" ",", ");
+			//val = " : " + val;
+		}
+
+		bool isInterface = false;		
+		XmlAttribute interfaceAttribute = (XmlAttribute)Classifier.Attributes.GetNamedItem("interface");
+		if (interfaceAttribute != null)
+		{
+			isInterface = Boolean.Parse(interfaceAttribute.Value);
+		}
+#>
+	/// <summary>
+<#
+			summary = getDocumentation(Classifier, "\t");
+			if (summary != "")
+			{
+#>	
+	/// <#= summary #>
+<#
+			}
+#>
+	/// eClass = <#=PackageURI#>#//<#=className#>
+	/// </summary>
+	public partial <# if (isInterface) { #>interface<# } else { #>class<# } #> <#=className#><#=val#>
+	{
+	 
+		[JsonProperty("eClass")]
+		public <# if (superTypes == null) { #>virtual<# } else { #>override<# } #> string EcoreClass { get {return "<#=PackageURI#>#//<#=className#>"; } }
+
+<# 
+	if (superTypes!=null){
+#>
+		public <#=className#>() : base()
+		{		
+		}
+<#
+	}
+#>
+
+<#
+	foreach (System.Xml.XmlElement Property in Classifier.GetElementsByTagName("eStructuralFeatures"))
+	{
+		string kind = Property.Attributes["type","http://www.w3.org/2001/XMLSchema-instance"].Value;
+		string name = Property.Attributes["name"].Value;
+		string Name = FirstLetterToUpper(name);
+		string upperBound = Property.Attributes["upperBound"] != null ? Property.Attributes["upperBound"].Value : "";
+		string type = MapEcoreDatatypes(Package,Classifiers,DataTypes,nsManager,Property.Attributes["eType"].Value);
+		
+		string defaultValue = string.Empty;
+		XmlAttribute defaultValueAttr = (XmlAttribute)Property.Attributes.GetNamedItem("defaultValueLiteral");
+		if (defaultValueAttr != null)
+		{
+			defaultValue =  defaultValueAttr.Value;
+		}
+		switch (upperBound)
+		{
+			case "-1":
+				type = string.Format("List<{0}>",type);
+				if (defaultValue == "")
+				{
+					defaultValue = string.Format("new {0}()",type); 
+				}
+				break;
+			default:
+				break;
+		}
+
+		//if (kind == "ecore:EAttribute")
+		//{
+#>
+		private <#= type #> _<#= name #><#= (defaultValue != "") ? " = " + defaultValue : "" #>;
+<#
+			foreach (System.Xml.XmlElement Annotation in Property.GetElementsByTagName("eAnnotations"))
+			{
+				string source = Annotation.Attributes["source"].Value;
+				if (source == "ArgumentDescription")
+				{
+					string key = Annotation.FirstChild.Attributes["key"].Value;
+					string value = Annotation.FirstChild.Attributes["value"].Value;
+#>
+		[<#= source #>(<#= key #> = <#= value #>)]
+<#
+				}			
+			}
+#>
+		/// <summary>
+<#
+			summary = getDocumentation(Property, "\t\t");
+			if (summary != "")
+			{
+#>
+		/// <#= summary #>
+<#
+			}
+#>
+		/// name = <#=  name #>
+		/// eType = <#= Property.Attributes["eType"].Value #>
+		/// </summary>
+		[JsonProperty("<#= name #>")]
+		public <#= type #> <#= Name #> { get {return _<#= name #>; } set { _<#= name #> = value; } }
+
+ <#        
+		//}
+
+		//else // kind == "ecore:EReference"
+		//{
+
+		//}
+
+	}
+#>
+	}
+
+<#
+	}
+#>
+
+#endregion
+
+#region EnumDefintions
+
+<# //Generate EnumDefintions
+	foreach (System.Xml.XmlElement EnumDef in Enums)
+	{
+		summary = getDocumentation(EnumDef);
+		if (summary != "")
+		{
+#>
+	/// <summary>
+	/// <#= summary #>
+	/// </summary>
+<#
+		}
+#>
+	public enum <#=EnumDef.Attributes["name"].Value#>
+	{
+		<#
+		bool isFirst = true;
+		foreach (System.Xml.XmlElement literal in EnumDef.GetElementsByTagName("eLiterals"))
+		{
+			if (isFirst)
+			{
+				isFirst = false;
+			}
+			else
+			{
+			 #>,
+		<#
+			}
+		#><#=literal.Attributes["name"].Value#> = <#=literal.Attributes["value"] != null ? literal.Attributes["value"].Value : "0"#><#}#>
+	
+	}
+<#
+	}
+#>
+
+#endregion
+
+} //namespace
+<#
+}
+
+} // foreach input file
+
+manager.Process();
+
+#>
+<#+
+string MapEcoreDatatypes(XmlElement Package,XmlNodeList Classifiers, XmlNodeList DataTypes,XmlNamespaceManager nsManager, string type)
+{
+	switch(type)
+	{
+		case "ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean":
+			type = "bool";
+			break;
+		case "ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString":
+			type = "string";
+			break;
+		case "ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EFloat":
+			type = "float";
+			break;
+		case "ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDouble":
+			type = "double";
+			break;
+		case "ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt":
+			type = "int";
+			break;
+		case "ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDate":
+			type = "DateTime";
+			break;
+		default:			
+			type = type.Replace("#//","");
+			//<eClassifiers xsi:type="ecore:EDataType" name="IElement" instanceClassName="Rendering.IElement"/>
+						
+			var datatype = Package.SelectSingleNode("//eClassifiers[@xsi:type='ecore:EDataType' and @name='"+type+"']",nsManager);
+			if (datatype != null)
+			{
+				type = datatype.Attributes["instanceClassName"].Value;
+			}
+					
+			break;
+	}
+	return type;
+}
+#>
+<#+
+/// <summary>
+/// A helper method to find the documentation of the given element by considering the extended meta data
+/// annotations.
+/// </summary>
+private string getDocumentation(System.Xml.XmlElement element, string prefix = "\t")
+{
+	foreach (System.Xml.XmlElement annotation in element.GetElementsByTagName("eAnnotations"))
+	{
+		if (annotation.ParentNode == element)
+		{
+			if (annotation.Attributes["source"].Value == @"http://www.eclipse.org/emf/2002/GenModel")
+			{
+				foreach (System.Xml.XmlElement details in element.GetElementsByTagName("details"))
+				{
+					if (details.Attributes["key"].Value == "documentation")
+					{
+						return details.Attributes["value"].Value.Replace("\n","\n" + prefix + "/// ");
+					}
+				}
+			}
+		}
+	}
+	return "";
+}
+
+private string FirstLetterToUpper(string s)
+{
+	if (string.IsNullOrEmpty(s))
+		return string.Empty;
+
+	char[] a = s.ToCharArray();
+	a[0] = char.ToUpper(a[0]);
+	return new string(a);
+}
+#>

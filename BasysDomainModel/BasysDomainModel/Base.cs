@@ -9,7 +9,7 @@ using Newtonsoft.Json;
 /// <summary>
 /// name = base
 /// nsPrefix = base
-/// nsURI = http://www.dfki.de/iui/basys/base
+/// nsURI = http://www.dfki.de/iui/basys/model/base
 /// </summary>
 namespace Basys.Model.Base
 {
@@ -19,13 +19,13 @@ namespace Basys.Model.Base
 	/// <summary>
 	
 	/// Weitere Attribute: für wen? cachable? 
-	/// eClass = http://www.dfki.de/iui/basys/base#//Metadata
+	/// eClass = http://www.dfki.de/iui/basys/model/base#//Metadata
 	/// </summary>
 	public partial class Metadata
 	{
 	 
 		[JsonProperty("eClass")]
-		public virtual string EcoreClass { get {return "http://www.dfki.de/iui/basys/base#//Metadata"; } }
+		public virtual string EcoreClass { get {return "http://www.dfki.de/iui/basys/model/base#//Metadata"; } }
 
 
 		private string _creator;
@@ -60,13 +60,13 @@ namespace Basys.Model.Base
 	/// <summary>
 	
 	/// BaSys-Basisklasse, TODO: weitere klassen hiervon ableiten, Metadata wird dann automatisch gesetzt.
-	/// eClass = http://www.dfki.de/iui/basys/base#//Entity
+	/// eClass = http://www.dfki.de/iui/basys/model/base#//Entity
 	/// </summary>
 	public partial class Entity
 	{
 	 
 		[JsonProperty("eClass")]
-		public virtual string EcoreClass { get {return "http://www.dfki.de/iui/basys/base#//Entity"; } }
+		public virtual string EcoreClass { get {return "http://www.dfki.de/iui/basys/model/base#//Entity"; } }
 
 
 		private Metadata _metadata;
@@ -80,13 +80,13 @@ namespace Basys.Model.Base
  	}
 
 	/// <summary>
-	/// eClass = http://www.dfki.de/iui/basys/base#//IdentifiableEntity
+	/// eClass = http://www.dfki.de/iui/basys/model/base#//IdentifiableEntity
 	/// </summary>
 	public partial class IdentifiableEntity : Entity
 	{
 	 
 		[JsonProperty("eClass")]
-		public override string EcoreClass { get {return "http://www.dfki.de/iui/basys/base#//IdentifiableEntity"; } }
+		public override string EcoreClass { get {return "http://www.dfki.de/iui/basys/model/base#//IdentifiableEntity"; } }
 
 		public IdentifiableEntity() : base()
 		{		
@@ -101,6 +101,44 @@ namespace Basys.Model.Base
 		public string Id { get {return _id; } set { _id = value; } }
 
  	}
+
+	/// <summary>
+	/// eClass = http://www.dfki.de/iui/basys/model/base#//Event
+	/// </summary>
+	public partial class Event : Entity
+	{
+	 
+		[JsonProperty("eClass")]
+		public override string EcoreClass { get {return "http://www.dfki.de/iui/basys/model/base#//Event"; } }
+
+		public Event() : base()
+		{		
+		}
+
+		private DateTime _timestamp;
+		/// <summary>
+		/// name = timestamp
+		/// eType = ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDate
+		/// </summary>
+		[JsonProperty("timestamp")]
+		public DateTime Timestamp { get {return _timestamp; } set { _timestamp = value; } }
+
+ 	}
+
+	/// <summary>
+	/// eClass = http://www.dfki.de/iui/basys/model/base#//Capability
+	/// </summary>
+	public partial class Capability : Entity
+	{
+	 
+		[JsonProperty("eClass")]
+		public override string EcoreClass { get {return "http://www.dfki.de/iui/basys/model/base#//Capability"; } }
+
+		public Capability() : base()
+		{		
+		}
+
+	}
 
 
 #endregion

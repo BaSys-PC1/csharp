@@ -4,9 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using Basys;
+using Basys.Model.Workplan;
 using Newtonsoft.Json;
-using Basys.Model.Domain;
 
 namespace BasysDomainModel
 {
@@ -15,31 +14,32 @@ namespace BasysDomainModel
 
         public void TestSerialization()
         {
-            Workplan s = new Workplan()
+            WorkplanInstance s = new WorkplanInstance()
             {
-                ProductVariantId = Guid.NewGuid().ToString(),
-                //Worksteps = {
-                //    new Workstep()
-                //    {
-                //        Duration = 10,
-                //        Id = Guid.NewGuid().ToString(),
-                //        Bom = new BOM()
-                //        {
-                //            Enties =
-                //            {
-                //                Amount = 4, 
-                //                MaterialId = Guid.NewGuid().ToString(),
-                //            }
-                //        }
-                //    }
-                //} 
+                ProductInstanceId = Guid.NewGuid().ToString(),
+                WorkstepInstances = {
+                    new WorkstepInstance()
+                    {
+                        Id = Guid.NewGuid().ToString(),
+                        IsAutomatic = true,
+                        Name = "Automatischer Arbeitsschritt",
+                        StationId = "5"
+                    },
+                    new WorkstepInstance()
+                    {
+                        Id = Guid.NewGuid().ToString(),
+                        IsAutomatic = false,
+                        Name = "Manueller Arbeitsschritt",
+                        StationId = "5"
+                    }
+                } 
             };
 
             string json = JsonConvert.SerializeObject(s,Formatting.Indented);
 
             Console.WriteLine(json);
 
-            Workplan s2 = JsonConvert.DeserializeObject<Workplan>(json);
+            WorkplanInstance s2 = JsonConvert.DeserializeObject<WorkplanInstance>(json);
 
             string json2 = JsonConvert.SerializeObject(s2, Formatting.Indented);
 

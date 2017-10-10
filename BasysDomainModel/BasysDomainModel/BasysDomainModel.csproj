@@ -51,16 +51,31 @@
       <DependentUpon>Model.tt</DependentUpon>
     </Compile>
     <Compile Include="Class1.cs" />
-    <Compile Include="Domain.cs">
-      <DependentUpon>Model.tt</DependentUpon>
-    </Compile>
     <Compile Include="Model.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Model.tt</DependentUpon>
     </Compile>
     <Compile Include="ModelBase.cs" />
+    <Compile Include="Order.cs">
+      <DependentUpon>Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Product.cs">
+      <DependentUpon>Model.tt</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Staff.cs">
+      <DependentUpon>Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Topology.cs">
+      <DependentUpon>Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Workerguidance.cs">
+      <DependentUpon>Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Workplan.cs">
+      <DependentUpon>Model.tt</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Model.tt">
@@ -76,7 +91,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="model\base.ecore" />
-    <None Include="model\domain.ecore" />
+    <None Include="model\order.ecore" />
+    <None Include="model\product.ecore" />
+    <None Include="model\staff.ecore" />
+    <None Include="model\topology.ecore" />
+    <None Include="model\workerguidance.ecore" />
+    <None Include="model\workplan.ecore" />
     <None Include="packages.config" />
     <None Include="TemplateFileManagerV2.1.ttinclude" />
   </ItemGroup>

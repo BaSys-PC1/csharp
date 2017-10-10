@@ -86,25 +86,35 @@ namespace <#=namespacePrefix + FirstLetterToUpper(PackageName)#>
 		string val = string.Empty;
 		if (superTypes != null)
 		{
-			
+			var pattern = "#//";
+
 			var stArray = superTypes.Value.Split(' ');
 			var stResult = new List<string>();
 			foreach (var st in stArray)
             {
-				if (st.StartsWith("#//"))
+				if (st.StartsWith(pattern))
                 {
-					stResult.Add(st.Replace("#//",""));
+					stResult.Add(st.Replace(pattern,""));
 				} 
 				else 
-				{
-					var pattern = "#//";
+				{	
 					var idx = st.IndexOf(pattern);
 					if (idx > 0) 
                     {
-						var basePackage = FirstLetterToUpper(st.Substring(0,idx).Replace(".ecore",""));
+						var basePackage = st.Substring(0,idx);		
+
+						if (basePackage.EndsWith(".ecore")) 
+						{
+							basePackage = basePackage.Replace(".ecore","");
+						}
+																						
+						basePackage = basePackage.Substring(basePackage.LastIndexOf('/')+1);						
+						basePackage = FirstLetterToUpper(basePackage);						
+												
 						var baseType    = st.Substring(idx+pattern.Length);
 						stResult.Add(namespacePrefix + basePackage + "." + baseType);
                     }
+					
 				}
 					
 			}
@@ -122,6 +132,13 @@ namespace <#=namespacePrefix + FirstLetterToUpper(PackageName)#>
 		{
 			isInterface = Boolean.Parse(interfaceAttribute.Value);
 		}
+
+		bool isAbstract = false;		
+		XmlAttribute abstractAttribute = (XmlAttribute)Classifier.Attributes.GetNamedItem("abstract");
+		if (abstractAttribute != null)
+		{
+			isAbstract = Boolean.Parse(abstractAttribute.Value);
+		}
 #>
 	/// <summary>
 <#
@@ -135,7 +152,7 @@ namespace <#=namespacePrefix + FirstLetterToUpper(PackageName)#>
 #>
 	/// eClass = <#=PackageURI#>#//<#=className#>
 	/// </summary>
-	public partial <# if (isInterface) { #>interface<# } else { #>class<# } #> <#=className#><#=val#>
+	public <# if (isInterface) { #>interface<# } else { if (isAbstract) { #>abstract <# } #>partial class<# } #> <#=className#><#=val#>
 	{
 	 
 		[JsonProperty("eClass")]

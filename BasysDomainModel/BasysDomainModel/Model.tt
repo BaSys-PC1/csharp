@@ -116,7 +116,7 @@ namespace <#=namespacePrefix + FirstLetterToUpper(PackageName)#>
                     }
 					
 				}
-					
+					//
 			}
 
 			val = " : " + string.Join(", ", stResult.ToArray());
@@ -315,6 +315,10 @@ string MapEcoreDatatypes(XmlElement Package,XmlNodeList Classifiers, XmlNodeList
 			break;
 		case "ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt":
 			type = "int";
+			break;
+		case "ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EcoreELong":
+		case "ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//ELong":
+			type = "long";
 			break;
 		case "ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDate":
 			type = "DateTime";

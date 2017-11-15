@@ -362,6 +362,42 @@ namespace Basys.Model.Topology
 
  	}
 
+	/// <summary>
+	/// eClass = http://www.dfki.de/iui/basys/model/topology#//Transition
+	/// </summary>
+	public partial class Transition
+	{
+	 
+		[JsonProperty("eClass")]
+		public virtual string EcoreClass { get {return "http://www.dfki.de/iui/basys/model/topology#//Transition"; } }
+
+
+		private string _componentId_src;
+		/// <summary>
+		/// name = componentId_src
+		/// eType = ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString
+		/// </summary>
+		[JsonProperty("componentId_src")]
+		public string ComponentId_src { get {return _componentId_src; } set { _componentId_src = value; } }
+
+ 		private string _componentId_target;
+		/// <summary>
+		/// name = componentId_target
+		/// eType = ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString
+		/// </summary>
+		[JsonProperty("componentId_target")]
+		public string ComponentId_target { get {return _componentId_target; } set { _componentId_target = value; } }
+
+ 		private float _distance;
+		/// <summary>
+		/// name = distance
+		/// eType = ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EFloat
+		/// </summary>
+		[JsonProperty("distance")]
+		public float Distance { get {return _distance; } set { _distance = value; } }
+
+ 	}
+
 
 #endregion
 

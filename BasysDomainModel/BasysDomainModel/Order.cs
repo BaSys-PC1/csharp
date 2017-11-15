@@ -85,11 +85,9 @@ namespace Basys.Model.Order
  	}
 
 	/// <summary>
-	
-	/// Unterschied zu OrderProgressChange? braucht man noch ein OrderStatusChange? Kann man das verschmelzen? -> ja, unterscheidung über Topics
 	/// eClass = http://www.dfki.de/iui/basys/model/order#//OrderStatus
 	/// </summary>
-	public partial class OrderStatus : Basys.Model.Base.Event
+	public partial class OrderStatus : Basys.Model.Base.Entity
 	{
 	 
 		[JsonProperty("eClass")]
@@ -122,6 +120,29 @@ namespace Basys.Model.Order
 		/// </summary>
 		[JsonProperty("pieceCount")]
 		public int PieceCount { get {return _pieceCount; } set { _pieceCount = value; } }
+
+ 	}
+
+	/// <summary>
+	/// eClass = http://www.dfki.de/iui/basys/model/order#//OrderStatusChangeEvent
+	/// </summary>
+	public partial class OrderStatusChangeEvent : OrderStatus
+	{
+	 
+		[JsonProperty("eClass")]
+		public override string EcoreClass { get {return "http://www.dfki.de/iui/basys/model/order#//OrderStatusChangeEvent"; } }
+
+		public OrderStatusChangeEvent() : base()
+		{		
+		}
+
+		private DateTime _timestamp;
+		/// <summary>
+		/// name = timestamp
+		/// eType = ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDate
+		/// </summary>
+		[JsonProperty("timestamp")]
+		public DateTime Timestamp { get {return _timestamp; } set { _timestamp = value; } }
 
  	}
 

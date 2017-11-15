@@ -65,34 +65,34 @@ namespace Basys.Model.Staff
  	}
 
 	/// <summary>
-	/// eClass = http://www.dfki.de/iui/basys/model/staff#//StaffRecognition
+	/// eClass = http://www.dfki.de/iui/basys/model/staff#//StaffLocation
 	/// </summary>
-	public partial class StaffRecognition : Basys.Model.Base.Event
+	public partial class StaffLocation : Basys.Model.Base.Entity
 	{
 	 
 		[JsonProperty("eClass")]
-		public override string EcoreClass { get {return "http://www.dfki.de/iui/basys/model/staff#//StaffRecognition"; } }
+		public override string EcoreClass { get {return "http://www.dfki.de/iui/basys/model/staff#//StaffLocation"; } }
 
-		public StaffRecognition() : base()
+		public StaffLocation() : base()
 		{		
 		}
 
-		private StaffRecognitionEnum _type;
+		private StaffDetectionEnum _detectionType;
 		/// <summary>
-		/// name = type
-		/// eType = #//StaffRecognitionEnum
+		/// name = detectionType
+		/// eType = #//StaffDetectionEnum
 		/// </summary>
-		[JsonProperty("type")]
-		public StaffRecognitionEnum Type { get {return _type; } set { _type = value; } }
+		[JsonProperty("detectionType")]
+		public StaffDetectionEnum DetectionType { get {return _detectionType; } set { _detectionType = value; } }
 
- 		private string _workerId;
+ 		private string _staffid;
 		/// <summary>
 		/// workerId oder staffId?
-		/// name = workerId
+		/// name = staffid
 		/// eType = ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString
 		/// </summary>
-		[JsonProperty("workerId")]
-		public string WorkerId { get {return _workerId; } set { _workerId = value; } }
+		[JsonProperty("staffid")]
+		public string Staffid { get {return _staffid; } set { _staffid = value; } }
 
  		private string _componentId;
 		/// <summary>
@@ -102,6 +102,100 @@ namespace Basys.Model.Staff
 		/// </summary>
 		[JsonProperty("componentId")]
 		public string ComponentId { get {return _componentId; } set { _componentId = value; } }
+
+ 	}
+
+	/// <summary>
+	/// eClass = http://www.dfki.de/iui/basys/model/staff#//StaffLocationChangeEvent
+	/// </summary>
+	public partial class StaffLocationChangeEvent : StaffLocation
+	{
+	 
+		[JsonProperty("eClass")]
+		public override string EcoreClass { get {return "http://www.dfki.de/iui/basys/model/staff#//StaffLocationChangeEvent"; } }
+
+		public StaffLocationChangeEvent() : base()
+		{		
+		}
+
+		private DateTime _timestamp;
+		/// <summary>
+		/// name = timestamp
+		/// eType = ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDate
+		/// </summary>
+		[JsonProperty("timestamp")]
+		public DateTime Timestamp { get {return _timestamp; } set { _timestamp = value; } }
+
+ 	}
+
+	/// <summary>
+	/// eClass = http://www.dfki.de/iui/basys/model/staff#//Ability
+	/// </summary>
+	public partial class Ability : Basys.Model.Base.Entity
+	{
+	 
+		[JsonProperty("eClass")]
+		public override string EcoreClass { get {return "http://www.dfki.de/iui/basys/model/staff#//Ability"; } }
+
+		public Ability() : base()
+		{		
+		}
+
+		private string _key;
+		/// <summary>
+		/// name = key
+		/// eType = ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString
+		/// </summary>
+		[JsonProperty("key")]
+		public string Key { get {return _key; } set { _key = value; } }
+
+ 		private string _value;
+		/// <summary>
+		/// name = value
+		/// eType = ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString
+		/// </summary>
+		[JsonProperty("value")]
+		public string Value { get {return _value; } set { _value = value; } }
+
+ 	}
+
+	/// <summary>
+	/// eClass = http://www.dfki.de/iui/basys/model/staff#//WorkstepSkill
+	/// </summary>
+	public partial class WorkstepSkill : Basys.Model.Base.Entity
+	{
+	 
+		[JsonProperty("eClass")]
+		public override string EcoreClass { get {return "http://www.dfki.de/iui/basys/model/staff#//WorkstepSkill"; } }
+
+		public WorkstepSkill() : base()
+		{		
+		}
+
+		private string _workstepId;
+		/// <summary>
+		/// name = workstepId
+		/// eType = ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString
+		/// </summary>
+		[JsonProperty("workstepId")]
+		public string WorkstepId { get {return _workstepId; } set { _workstepId = value; } }
+
+ 		private int _level;
+		/// <summary>
+		/// 0 - 100
+		/// name = level
+		/// eType = ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt
+		/// </summary>
+		[JsonProperty("level")]
+		public int Level { get {return _level; } set { _level = value; } }
+
+ 		private WorkstepPreferenceEnum _preference;
+		/// <summary>
+		/// name = preference
+		/// eType = #//WorkstepPreferenceEnum
+		/// </summary>
+		[JsonProperty("preference")]
+		public WorkstepPreferenceEnum Preference { get {return _preference; } set { _preference = value; } }
 
  	}
 
@@ -127,50 +221,21 @@ namespace Basys.Model.Staff
 		[JsonProperty("workerId")]
 		public string WorkerId { get {return _workerId; } set { _workerId = value; } }
 
- 		private List<StaffSkill> _skills = new List<StaffSkill>();
+ 		private List<WorkstepSkill> _workstepSkills = new List<WorkstepSkill>();
 		/// <summary>
-		/// name = skills
-		/// eType = #//StaffSkill
+		/// name = workstepSkills
+		/// eType = #//WorkstepSkill
 		/// </summary>
-		[JsonProperty("skills")]
-		public List<StaffSkill> Skills { get {return _skills; } set { _skills = value; } }
+		[JsonProperty("workstepSkills")]
+		public List<WorkstepSkill> WorkstepSkills { get {return _workstepSkills; } set { _workstepSkills = value; } }
 
- 	}
-
-	/// <summary>
-	/// eClass = http://www.dfki.de/iui/basys/model/staff#//StaffSkill
-	/// </summary>
-	public partial class StaffSkill
-	{
-	 
-		[JsonProperty("eClass")]
-		public virtual string EcoreClass { get {return "http://www.dfki.de/iui/basys/model/staff#//StaffSkill"; } }
-
-
-		private string _workstepId;
+ 		private List<Ability> _abilities = new List<Ability>();
 		/// <summary>
-		/// name = workstepId
-		/// eType = ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString
+		/// name = abilities
+		/// eType = #//Ability
 		/// </summary>
-		[JsonProperty("workstepId")]
-		public string WorkstepId { get {return _workstepId; } set { _workstepId = value; } }
-
- 		private int _level;
-		/// <summary>
-		/// 0 - 100
-		/// name = level
-		/// eType = ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt
-		/// </summary>
-		[JsonProperty("level")]
-		public int Level { get {return _level; } set { _level = value; } }
-
- 		private PreferenceEnum _preference;
-		/// <summary>
-		/// name = preference
-		/// eType = #//PreferenceEnum
-		/// </summary>
-		[JsonProperty("preference")]
-		public PreferenceEnum Preference { get {return _preference; } set { _preference = value; } }
+		[JsonProperty("abilities")]
+		public List<Ability> Abilities { get {return _abilities; } set { _abilities = value; } }
 
  	}
 
@@ -179,13 +244,13 @@ namespace Basys.Model.Staff
 
 #region EnumDefintions
 
-	public enum StaffRecognitionEnum
+	public enum StaffDetectionEnum
 	{
 		UNKNOWN = 0,
 		PRESENT = 1,
 		IN_TRANSIT = 2	
 	}
-	public enum PreferenceEnum
+	public enum WorkstepPreferenceEnum
 	{
 		NEUTRAL = 0,
 		POSITIVE = 1,

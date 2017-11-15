@@ -10,4 +10,5 @@
 // BasysDomainModel\BasysDomainModel\Staff.cs
 // BasysDomainModel\BasysDomainModel\Product.cs
 // BasysDomainModel\BasysDomainModel\Order.cs
+// BasysDomainModel\BasysDomainModel\Linebalancing.cs
 // BasysDomainModel\BasysDomainModel\Base.cs

@@ -73,13 +73,13 @@ namespace Basys.Model.Workplan
 		[JsonProperty("name")]
 		public string Name { get {return _name; } set { _name = value; } }
 
- 		private string _stationId;
+ 		private string _componentId;
 		/// <summary>
-		/// name = stationId
+		/// name = componentId
 		/// eType = ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString
 		/// </summary>
-		[JsonProperty("stationId")]
-		public string StationId { get {return _stationId; } set { _stationId = value; } }
+		[JsonProperty("componentId")]
+		public string ComponentId { get {return _componentId; } set { _componentId = value; } }
 
  		private bool _isAutomatic;
 		/// <summary>
@@ -92,25 +92,25 @@ namespace Basys.Model.Workplan
  	}
 
 	/// <summary>
-	/// eClass = http://www.dfki.de/iui/basys/model/workplan#//WorkstepInstanceChangeEvent
+	/// eClass = http://www.dfki.de/iui/basys/model/workplan#//WorkstepInstanceStatus
 	/// </summary>
-	public partial class WorkstepInstanceChangeEvent : Basys.Model.Base.Event
+	public partial class WorkstepInstanceStatus : Basys.Model.Base.Entity
 	{
 	 
 		[JsonProperty("eClass")]
-		public override string EcoreClass { get {return "http://www.dfki.de/iui/basys/model/workplan#//WorkstepInstanceChangeEvent"; } }
+		public override string EcoreClass { get {return "http://www.dfki.de/iui/basys/model/workplan#//WorkstepInstanceStatus"; } }
 
-		public WorkstepInstanceChangeEvent() : base()
+		public WorkstepInstanceStatus() : base()
 		{		
 		}
 
-		private WorkstepInstanceChangeType _type;
+		private WorkstepInstanceStatusEnum _status;
 		/// <summary>
-		/// name = type
-		/// eType = #//WorkstepInstanceChangeType
+		/// name = status
+		/// eType = #//WorkstepInstanceStatusEnum
 		/// </summary>
-		[JsonProperty("type")]
-		public WorkstepInstanceChangeType Type { get {return _type; } set { _type = value; } }
+		[JsonProperty("status")]
+		public WorkstepInstanceStatusEnum Status { get {return _status; } set { _status = value; } }
 
  		private string _productInstanceId;
 		/// <summary>
@@ -127,6 +127,29 @@ namespace Basys.Model.Workplan
 		/// </summary>
 		[JsonProperty("workstepInstanceId")]
 		public string WorkstepInstanceId { get {return _workstepInstanceId; } set { _workstepInstanceId = value; } }
+
+ 	}
+
+	/// <summary>
+	/// eClass = http://www.dfki.de/iui/basys/model/workplan#//WorkstepInstanceStatusChangeEvent
+	/// </summary>
+	public partial class WorkstepInstanceStatusChangeEvent : WorkstepInstanceStatus
+	{
+	 
+		[JsonProperty("eClass")]
+		public override string EcoreClass { get {return "http://www.dfki.de/iui/basys/model/workplan#//WorkstepInstanceStatusChangeEvent"; } }
+
+		public WorkstepInstanceStatusChangeEvent() : base()
+		{		
+		}
+
+		private DateTime _timestamp;
+		/// <summary>
+		/// name = timestamp
+		/// eType = ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDate
+		/// </summary>
+		[JsonProperty("timestamp")]
+		public DateTime Timestamp { get {return _timestamp; } set { _timestamp = value; } }
 
  	}
 
@@ -148,37 +171,29 @@ namespace Basys.Model.Workplan
 		[JsonProperty("workstepInstanceId")]
 		public string WorkstepInstanceId { get {return _workstepInstanceId; } set { _workstepInstanceId = value; } }
 
- 		private int _beginnerLevel;
+ 		private string _agentId;
 		/// <summary>
-		/// name = beginnerLevel
-		/// eType = ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt
+		/// name = agentId
+		/// eType = ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString
 		/// </summary>
-		[JsonProperty("beginnerLevel")]
-		public int BeginnerLevel { get {return _beginnerLevel; } set { _beginnerLevel = value; } }
+		[JsonProperty("agentId")]
+		public string AgentId { get {return _agentId; } set { _agentId = value; } }
 
- 		private int _beginnerLevelDeviance;
+ 		private double _average;
 		/// <summary>
-		/// name = beginnerLevelDeviance
-		/// eType = ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt
+		/// name = average
+		/// eType = ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDouble
 		/// </summary>
-		[JsonProperty("beginnerLevelDeviance")]
-		public int BeginnerLevelDeviance { get {return _beginnerLevelDeviance; } set { _beginnerLevelDeviance = value; } }
+		[JsonProperty("average")]
+		public double Average { get {return _average; } set { _average = value; } }
 
- 		private int _expertLevel;
+ 		private double _standardDeviation;
 		/// <summary>
-		/// name = expertLevel
-		/// eType = ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt
+		/// name = standardDeviation
+		/// eType = ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDouble
 		/// </summary>
-		[JsonProperty("expertLevel")]
-		public int ExpertLevel { get {return _expertLevel; } set { _expertLevel = value; } }
-
- 		private int _expertLevelDeviance;
-		/// <summary>
-		/// name = expertLevelDeviance
-		/// eType = ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt
-		/// </summary>
-		[JsonProperty("expertLevelDeviance")]
-		public int ExpertLevelDeviance { get {return _expertLevelDeviance; } set { _expertLevelDeviance = value; } }
+		[JsonProperty("standardDeviation")]
+		public double StandardDeviation { get {return _standardDeviation; } set { _standardDeviation = value; } }
 
  	}
 
@@ -187,7 +202,7 @@ namespace Basys.Model.Workplan
 
 #region EnumDefintions
 
-	public enum WorkstepInstanceChangeType
+	public enum WorkstepInstanceStatusEnum
 	{
 		UNKNOWN = 0,
 		STARTED = 1,

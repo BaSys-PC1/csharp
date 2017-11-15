@@ -51,6 +51,9 @@
       <DependentUpon>Model.tt</DependentUpon>
     </Compile>
     <Compile Include="Class1.cs" />
+    <Compile Include="Linebalancing.cs">
+      <DependentUpon>Model.tt</DependentUpon>
+    </Compile>
     <Compile Include="Model.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -91,6 +94,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="model\base.ecore" />
+    <None Include="model\linebalancing.ecore" />
     <None Include="model\order.ecore" />
     <None Include="model\product.ecore" />
     <None Include="model\staff.ecore" />

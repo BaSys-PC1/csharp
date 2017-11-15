@@ -31,7 +31,15 @@ namespace Basys.Model.Product
 		{		
 		}
 
-	}
+		private string _name;
+		/// <summary>
+		/// name = name
+		/// eType = ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString
+		/// </summary>
+		[JsonProperty("name")]
+		public string Name { get {return _name; } set { _name = value; } }
+
+ 	}
 
 	/// <summary>
 	
@@ -109,7 +117,7 @@ namespace Basys.Model.Product
 
 	/// <summary>
 	
-	/// kann am ProductLifecycleService abgefragt (getCurrentStatus/ getStatusHistory) werden und wird kontinuierlich als Event publiziert, sollte man noch den Ort aufnehmen?
+	/// kann am ProductLifecycleService abgefragt (getCurrentStatus/ getStatusHistory) werden
 	/// eClass = http://www.dfki.de/iui/basys/model/product#//ProductInstanceStatus
 	/// </summary>
 	public partial class ProductInstanceStatus : Basys.Model.Base.Entity
@@ -138,38 +146,51 @@ namespace Basys.Model.Product
 		[JsonProperty("status")]
 		public ProductInstanceStatusEnum Status { get {return _status; } set { _status = value; } }
 
- 		private string _workstepInstanceId;
+ 	}
+
+	/// <summary>
+	/// eClass = http://www.dfki.de/iui/basys/model/product#//ProductInstanceStatusEvent
+	/// </summary>
+	public partial class ProductInstanceStatusEvent : ProductInstanceStatus
+	{
+	 
+		[JsonProperty("eClass")]
+		public override string EcoreClass { get {return "http://www.dfki.de/iui/basys/model/product#//ProductInstanceStatusEvent"; } }
+
+		public ProductInstanceStatusEvent() : base()
+		{		
+		}
+
+		private DateTime _timestamp;
 		/// <summary>
-		/// name = workstepInstanceId
-		/// eType = ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString
+		/// name = timestamp
+		/// eType = ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDate
 		/// </summary>
-		[JsonProperty("workstepInstanceId")]
-		public string WorkstepInstanceId { get {return _workstepInstanceId; } set { _workstepInstanceId = value; } }
+		[JsonProperty("timestamp")]
+		public DateTime Timestamp { get {return _timestamp; } set { _timestamp = value; } }
 
  	}
 
 	/// <summary>
-	
-	/// Umbenennung ProductLocation? Kann diese Info auch am PLC-Dienst abgefragt werden? oder PromiseMonitoring?
-	/// eClass = http://www.dfki.de/iui/basys/model/product#//ProductRecognition
+	/// eClass = http://www.dfki.de/iui/basys/model/product#//ProductInstanceLocation
 	/// </summary>
-	public partial class ProductRecognition : Basys.Model.Base.Entity
+	public partial class ProductInstanceLocation : Basys.Model.Base.Entity
 	{
 	 
 		[JsonProperty("eClass")]
-		public override string EcoreClass { get {return "http://www.dfki.de/iui/basys/model/product#//ProductRecognition"; } }
+		public override string EcoreClass { get {return "http://www.dfki.de/iui/basys/model/product#//ProductInstanceLocation"; } }
 
-		public ProductRecognition() : base()
+		public ProductInstanceLocation() : base()
 		{		
 		}
 
-		private RecognitionEnum _eventType;
+		private ProductInstanceDetectionEnum _detectionType;
 		/// <summary>
-		/// name = eventType
-		/// eType = #//RecognitionEnum
+		/// name = detectionType
+		/// eType = #//ProductInstanceDetectionEnum
 		/// </summary>
-		[JsonProperty("eventType")]
-		public RecognitionEnum EventType { get {return _eventType; } set { _eventType = value; } }
+		[JsonProperty("detectionType")]
+		public ProductInstanceDetectionEnum DetectionType { get {return _detectionType; } set { _detectionType = value; } }
 
  		private string _productInstanceId;
 		/// <summary>
@@ -190,19 +211,42 @@ namespace Basys.Model.Product
 
  	}
 
+	/// <summary>
+	/// eClass = http://www.dfki.de/iui/basys/model/product#//ProductInstanceLocationEvent
+	/// </summary>
+	public partial class ProductInstanceLocationEvent : ProductInstanceLocation
+	{
+	 
+		[JsonProperty("eClass")]
+		public override string EcoreClass { get {return "http://www.dfki.de/iui/basys/model/product#//ProductInstanceLocationEvent"; } }
+
+		public ProductInstanceLocationEvent() : base()
+		{		
+		}
+
+		private DateTime _timestamp;
+		/// <summary>
+		/// name = timestamp
+		/// eType = ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDate
+		/// </summary>
+		[JsonProperty("timestamp")]
+		public DateTime Timestamp { get {return _timestamp; } set { _timestamp = value; } }
+
+ 	}
+
 
 #endregion
 
 #region EnumDefintions
 
-	public enum RecognitionEnum
+	public enum ProductInstanceDetectionEnum
 	{
 		UNKNOWN = 0,
 		PRESENT = 1,
 		IN_TRANSIT = 2	
 	}
 	/// <summary>
-	/// Weitere Literale? Verschmelzung mit OderStatusEnum?
+	/// Weitere Literale? Verschmelzung mit OrderStatusEnum?
 	/// </summary>
 	public enum ProductInstanceStatusEnum
 	{

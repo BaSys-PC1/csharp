@@ -149,15 +149,15 @@ namespace Basys.Model.Product
  	}
 
 	/// <summary>
-	/// eClass = http://www.dfki.de/iui/basys/model/product#//ProductInstanceStatusEvent
+	/// eClass = http://www.dfki.de/iui/basys/model/product#//ProductInstanceStatusChangeEvent
 	/// </summary>
-	public partial class ProductInstanceStatusEvent : ProductInstanceStatus
+	public partial class ProductInstanceStatusChangeEvent : ProductInstanceStatus
 	{
 	 
 		[JsonProperty("eClass")]
-		public override string EcoreClass { get {return "http://www.dfki.de/iui/basys/model/product#//ProductInstanceStatusEvent"; } }
+		public override string EcoreClass { get {return "http://www.dfki.de/iui/basys/model/product#//ProductInstanceStatusChangeEvent"; } }
 
-		public ProductInstanceStatusEvent() : base()
+		public ProductInstanceStatusChangeEvent() : base()
 		{		
 		}
 
@@ -212,15 +212,15 @@ namespace Basys.Model.Product
  	}
 
 	/// <summary>
-	/// eClass = http://www.dfki.de/iui/basys/model/product#//ProductInstanceLocationEvent
+	/// eClass = http://www.dfki.de/iui/basys/model/product#//ProductInstanceLocationChangeEvent
 	/// </summary>
-	public partial class ProductInstanceLocationEvent : ProductInstanceLocation
+	public partial class ProductInstanceLocationChangeEvent : ProductInstanceLocation
 	{
 	 
 		[JsonProperty("eClass")]
-		public override string EcoreClass { get {return "http://www.dfki.de/iui/basys/model/product#//ProductInstanceLocationEvent"; } }
+		public override string EcoreClass { get {return "http://www.dfki.de/iui/basys/model/product#//ProductInstanceLocationChangeEvent"; } }
 
-		public ProductInstanceLocationEvent() : base()
+		public ProductInstanceLocationChangeEvent() : base()
 		{		
 		}
 

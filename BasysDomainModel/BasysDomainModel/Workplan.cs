@@ -156,12 +156,15 @@ namespace Basys.Model.Workplan
 	/// <summary>
 	/// eClass = http://www.dfki.de/iui/basys/model/workplan#//Duration
 	/// </summary>
-	public partial class Duration
+	public partial class Duration : Basys.Model.Base.Entity
 	{
 	 
 		[JsonProperty("eClass")]
-		public virtual string EcoreClass { get {return "http://www.dfki.de/iui/basys/model/workplan#//Duration"; } }
+		public override string EcoreClass { get {return "http://www.dfki.de/iui/basys/model/workplan#//Duration"; } }
 
+		public Duration() : base()
+		{		
+		}
 
 		private string _workstepInstanceId;
 		/// <summary>
@@ -209,7 +212,8 @@ namespace Basys.Model.Workplan
 		PAUSED = 2,
 		REPEATING = 3,
 		FINISHED = 4,
-		ABORTED = 5	
+		ABORTED = 5,
+		RESUMED = 6	
 	}
 
 #endregion
